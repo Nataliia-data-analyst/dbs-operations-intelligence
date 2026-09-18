@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: dbs-operations-db
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: operations_intelligence
+
+    ports:
+      - "5434:5432"
+
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+      - dbs-operations-data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U postgres -d operations_intelligence"
+        ]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  dbs-operations-data:
