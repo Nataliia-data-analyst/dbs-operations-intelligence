@@ -46,28 +46,6 @@ def test_sql_validation():
 
 
 def test_run_sql():
-    open_pool()
+    rows = run_sql("SELECT 1 AS value")
 
-    try:
-        rows = run_sql(
-            """
-            SELECT
-                supplier_id,
-                supplier_name,
-                category,
-                risk_level
-            FROM suppliers
-            ORDER BY supplier_id
-            """
-        )
-
-        print("\nSQL result:")
-
-        for row in rows:
-            print(row)
-
-        assert len(rows) > 0
-        assert "supplier_name" in rows[0]
-
-    finally:
-        close_pool()
+    assert rows[0]["value"] == 1

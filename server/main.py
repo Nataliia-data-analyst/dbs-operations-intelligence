@@ -59,12 +59,17 @@ def main() -> None:
     transport = os.getenv("MCP_TRANSPORT", "stdio")
 
     open_pool()
-
     try:
-        mcp.run(transport=transport)
+        if transport == "streamable-http":
+            port = int(os.getenv("PORT", "8000"))
+
+            mcp.run(
+                transport="streamable-http",
+                host="0.0.0.0",
+                port=port,
+                streamable_http_path="/mcp",
+            )
+        else:
+            mcp.run(transport=transport)
     finally:
         close_pool()
-
-
-if __name__ == "__main__":
-    main()
