@@ -58,10 +58,18 @@ def run_sql(query: str) -> list[dict]:
 def main() -> None:
     transport = os.getenv("MCP_TRANSPORT", "stdio")
 
+    print(f"1. transport = {transport}", flush=True)
+    print("2. opening DB pool...", flush=True)
+
     open_pool()
+
+    print("3. DB pool opened", flush=True)
+
     try:
         if transport == "streamable-http":
             port = int(os.getenv("PORT", "8000"))
+
+            print(f"4. starting HTTP server on 0.0.0.0:{port}", flush=True)
 
             mcp.run(
                 transport="streamable-http",
@@ -70,6 +78,10 @@ def main() -> None:
                 streamable_http_path="/mcp",
             )
         else:
+            print("4. starting stdio server", flush=True)
             mcp.run(transport=transport)
     finally:
+        print("5. closing DB pool", flush=True)
         close_pool()
+if __name__ == "__main__":
+    main()
